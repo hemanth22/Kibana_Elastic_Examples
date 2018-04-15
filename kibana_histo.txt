@@ -1,0 +1,232 @@
+    1  ls
+    2  systemctl status elasticsearcj
+    3  systemctl status elasticsearch
+    4  clear
+    5  ls
+    6  ls -la
+    7  cd .ssh/
+    8  ls
+    9  cd ..
+   10  cd .ansible/
+   11  ls
+   12  cd tmp/
+   13  ls
+   14  cd ~
+   15  clear
+   16  ls
+   17  cd /etc/
+   18  ls
+   19  cler
+   20  clear
+   21  cd -
+   22  lc
+   23  ls
+   24  wget https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.3.noarch.rpm
+   25  sudo rpm -ivh elasticsearch-1.7.3.noarch.rpm
+   26  sudo systemctl daemon-reload
+   27  sudo systemctl enable elasticsearch
+   28  sudo systemctl status -l elasticsearch
+   29  sudo systemctl start elasticsearch
+   30  sudo systemctl status -l elasticsearch
+   31  exit
+   32  ls
+   33  curl -X GET 'http://localhost:9200'
+   34  cd /etc/elasticsearch/
+   35  ls
+   36  curl -X POST 'http://localhost:9200/tutorial/helloworld/1' -d '{ "message": "Hello World!" }'
+   37  curl -X GET 'http://localhost:9200/tutorial/helloworld/1?pretty'
+   38  exit
+   39  ls
+   40  sudo yum install elink lynx
+   41  poweroff
+   42  ls
+   43  sudo yum group list
+   44  sudo yum group install "GNOME Desktop"
+   45  reboot
+   46  sudo vi /etc/yum.repos.d/kibana.repo
+   47  cd /etc/yum.repos.d/
+   48  chmod 777 kibana.repo 
+   49  sudo chmod 777 kibana.repo 
+   50  ls
+   51  sudo yum
+   52  sudo yum install kibana
+   53  sudo systemctl enable kibana
+   54  sudo systemctl start kibana
+   55  exit
+   56  ls
+   57  elasticsearch localhost:9200
+   58  elasticsearch localhost:9206
+   59  history
+   60  curl -X GET 'http://localhost:9200/tutorial/helloworld/1?pretty'
+   61  curl -X GET 'http://localhost:9200/tutorial/helloworld/2?pretty'
+   62  curl -X GET 'http://localhost:9200/tutorial/helloworld/1?pretty'
+   63  clear
+   64  ls
+   65  curl -X GET 'http://localhost:9200/tutorial/helloworld/1?pretty'
+   66  sudo yum removeelasticsearch
+   67  sudo yum remove elasticsearch
+   68  sudo yum install elasticsearch
+   69  sudo yum install epel-release
+   70  sudo yum install yumex
+   71  sudo systemctl status elasticsearch
+   72  sudo systemctl daemon-reload
+   73  sudo systemctl status elasticsearch
+   74  sudo systemctl enable elasticsearch
+   75  sudo systemctl start elasticsearch
+   76  sudo systemctl status elasticsearch
+   77  sudo systemctl status -l elasticsearch
+   78  sudo systemctl restart elasticsearch
+   79  sudo systemctl status -l elasticsearch
+   80  sudo systemctl stop elasticsearch
+   81  sudo systemctl disable elasticsearch
+   82  sudo systemctl status -l elasticsearch
+   83  reboot
+   84  ls
+   85  sudo yum remove elasticsearch
+   86  curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.1.1.tar.gz
+   87  tar -xvf elasticsearch-6.1.1.tar.gz
+   88  cd elasticsearch-6.1.1/bin
+   89  ./elasticsearch
+   90  exit
+   91  cd elasticsearch-6.1.1/
+   92  ls
+   93  cd bin
+   94  clear
+   95  ls
+   96  ./elasticsearch
+   97  exit
+   98  sudo find / -name elasticsearch.yml -type f
+   99  elasticsearch
+  100  elasticsearch /home/user
+  101  exit
+  102  ls
+  103  cd /vagrant/
+  104  ls
+  105  cp reqs ~/Desktop/
+  106  cd ~/Desktop/
+  107  ls
+  108  clear
+  109  ls
+  110  cat reqs 
+  111  vim reqs
+  112  curl -s -H "Content-Type: application/x-ndjson" -XPOST localhost:9200/_bulk --data-binary "@reqs"; echo
+  113  cd /vagrant/
+  114  ls
+  115  cp accounts.zip logs.jsonl.gz shakespeare_6.0.json ~/Desktop/
+  116  cd ~/Desktop/
+  117  ls
+  118  tar -zxvf accounts.zip logs.jsonl.gz 
+  119  tar -zxvf accounts.zip
+  120  unzip accounts.zip 
+  121  ls
+  122  tar -zxvf logs.jsonl.gz 
+  123  unzip logs.jsonl.gz
+  124  clear
+  125  ls
+  126  head
+  127  head accounts.json
+  128  l
+  129  head logs.jsonl
+  130  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/_bulk?pretty --data-binary "@accounts.json"; echo
+  131  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/_bulk?pretty' --data-binary "@accounts.json"; echo
+  132  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/_bulk' --data-binary "@accounts.json"; echo
+  133  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/_bulk' --data-binary @accounts.json
+  134  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json
+  135  head accounts.json
+  136  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/Investment/account/_bulk?pretty' --data-binary @accounts.json
+  137  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/investment/account/_bulk?pretty' --data-binary @accounts.json
+  138  sudo poweroff
+  139  ifconfig -a | grep inet
+  140  clear
+  141  cd /usr/share/elasticsearch/
+  142  ls
+  143  cd bin
+  144  ls
+  145  sudo elasticsearch-plugin install x-pack
+  146  sudo elasticsearch-plugin install X-pack
+  147  sudo elasticsearch-plugin install x-pack
+  148  ls
+  149  elasticsearch-plugin install x-pack
+  150  ls -la
+  151  plugin install x-pack
+  152  sudo plugin install x-pack
+  153  clear
+  154  cd ~
+  155  cp /vagrant/espractise.txt .
+  156  ls
+  157  cd Desktop/
+  158  ls
+  159  curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/_bulk?pretty' --data-binary @logs.jsonl
+  160  sudo systemctl status elasticsearch
+  161  sudo systemctl restart elasticsearch
+  162  sudo systemctl status elasticsearch
+  163  sudo systemctl status -l elasticsearch
+  164  ls
+  165  cd ../Downloads/
+  166  ls
+  167  sudo yum unintall logstash
+  168  sudo yum remove logstash
+  169  sudo reboot
+  170  exit
+  171  cp espractise.txt /vagrant/espractise.txt 
+  172  atom espractise.txt
+  173  exit
+  174  cd /usr/share/elasticsearch/
+  175  ls
+  176  cd /etc/elasticsearch/
+  177  ls
+  178  su root
+  179  wget https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.3.noarch.rpm
+  180  curl localhost:9200
+  181  exit
+  182  ls
+  183  cp espractise.txt /vagrant/
+  184  cd /vagrant/
+  185  l
+  186  ls
+  187  ls -la espractise.txt 
+  188  exit
+  189  sudo firewall-cmd --add-port=9200 --permanent
+  190  sudo firewall-cmd --add-ports=9200/tcp --permanent
+  191  sudo firewall-cmd --add-port=9200/tcp --permanent
+  192  sudo firewall-cmd --reload
+  193  exit
+  194  ifconfig -a | grep inet
+  195  sudo firewall-cmd --add-ports=9200/udp --permanent
+  196  sudo firewall-cmd --add-port=9200/udp --permanent
+  197  sudo firewall-cmd --reload
+  198  exit
+  199  ls
+  200  ifconfig -a | grep inet
+  201  exit
+  202  ifconfig -a | grep inet
+  203  exit
+  204  ifconfig -a | grep inet
+  205  exit
+  206  vim /etc/netconfig 
+  207  find / -iname network-script -type d 
+  208  sudo find / -iname network-script -type d 
+  209  cd /etc/
+  210  sudo find / -iname if -type f
+  211  sudo find / -iname *etho* -type f
+  212  ls
+  213  clear
+  214  ls
+  215  cd ..
+  216  clear
+  217  find / -iname network-scripts -type d 
+  218  sudo find / -iname network-scripts -type d 
+  219  cd /etc/sysconfig/network-scripts/
+  220  ls
+  221  sudo vim ifcfg-enp0s3
+  222  sudo cat ifcfg-enp0s3
+  223  sudo cat ifcfg-enp0s3.bak
+  224  sudo cat ifcfg-enp0s8
+  225  sudo cat ifcfg-enp0s8.bak 
+  226  exit
+  227  ifconfig -a | grep inet
+  228  sudo yum install tigervnc-*
+  229  history
+  230  sudo elasticsearch-plugin install x-pack
+  231  exit
+  232  history > kibana_histo.txt

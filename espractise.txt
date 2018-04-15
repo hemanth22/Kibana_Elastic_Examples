@@ -1,0 +1,560 @@
+GET _cat/health?v
+GET _cat/nodes?v
+GET _cat/indices?v
+
+PUT sales
+PUT _sales/order/123
+{
+    "orderId":"123",
+    "orderName":"Bitra Hemanth",
+    "orderType":"Food",
+    "orderAmount":"522"
+}
+
+GET sales/order/123
+
+DELETE sales
+
+
+Below command for bulk put:
+
+curl -s -H "Content-Type: application/x-ndjson" -XPOST localhost:9200/_bulk --data-binary "@reqs"; echo
+
+Bulk put in kibana alternative comand:
+
+POST _bulk
+{"index" :  { "_index" : "my-test", "_type" : "my-type", "_id" : "1"}}
+{ "col1" : "val1"}
+{"index" :  { "_index" : "my-test", "_type" : "my-type", "_id" : "2"}}
+{ "col1" : "val2"}
+{"index" :  { "_index" : "my-test", "_type" : "my-type", "_id" : "1"}}
+{ "col1" : "val3"}
+
+
+
+Practise available in elastic.co
+
+https://www.elastic.co/guide/en/kibana/current/tutorial-load-dataset.html
+
+curl -s -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json
+
+PUT /logstach-2015.05.18
+{
+  "mappings": {
+    "log": {
+      "properties": {
+        "geo": {
+          "properties": {
+            "coordinates": {
+              "type": "geo_point"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+GET _cat/indices/logstach*
+
+GET _cat/indices/logstach-2015.05.18
+
+GET bank/account/_search
+
+GET bank/account/_search
+{
+  "query": {
+    "match": {
+      "state": "CA"
+    }
+  }
+}
+
+
+GET bank/account/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"match": {
+          "state": "CA"
+        }},
+        {"match": {
+          "employer": "Techade"
+        }
+        }
+      ]
+    }
+  }
+}
+
+
+
+
+GET bank/account/_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        {"match": {
+          "state": "CA"
+        }},
+        {"match": {
+          "employer": "Techade"
+        }
+        }
+      ]
+    }
+  }
+}
+
+
+GET bank/account/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {"match": {"state": "CA"} },
+        {"match": {"lastname": { "query": "Smith", "boost": 3}}}
+      ]
+    }
+  }
+}
+
+GET bank/account/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {"match": {"state": "CA"} },
+        {"match": {"lastname": { "query": "Smith", "boost": 3}}}
+      ]
+    }
+  }
+}
+
+
+GET bank/account/_search
+{
+  "query": {
+    "term": {
+      "account_number": 516
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "query": {
+    "term": {
+      "state": "RI"
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "query": {
+    "match": {
+      "state": "RI"
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "query": {
+    "terms": {
+      "account_number": 516
+    }
+  }
+}
+
+GET bank/account/_search
+{
+  "query": {
+    "terms": {
+      "account_number": [516,218]
+    }
+  }
+}
+
+
+GET bank/account/_search
+{
+  "query": {
+    "range": {
+      "account_number": {
+        "gte": 516,
+        "lte": 851,
+        "boost": 2
+      }
+    }
+  }
+}
+
+
+GET bank/account/_search
+{
+  "query": {
+    "range": {
+      "age": {
+        "gte": 35
+      }
+    }
+  }
+}
+
+
+GET bank/_analyze
+{
+  "tokenizer": "standard",
+  "text": "The Moon is Made of Cheese some say"
+}
+
+
+GET bank/_analyze
+{
+  "tokenizer": "standard",
+  "text": "The Moon-is-Made of Cheese.some say$"
+}
+
+
+
+GET bank/_analyze
+{
+  "tokenizer": "letter",
+  "text": "The Moon-is-Made of Cheese.some say$"
+}
+
+GET bank/_analyze
+{
+  "tokenizer": "standard",
+  "text": "you@example.com login at https://bensullins.com attempt"
+}
+
+
+GET bank/_analyze
+{
+  "tokenizer": "uax_url_email",
+  "text": "you@example.com login at https://bensullins.com attempt"
+}
+
+
+
+PUT /idx1
+{
+  "mappings": {
+    "t1": {
+      "properties": {
+        "title": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "english_title": {
+          "type": "text",
+          "analyzer": "english"
+        }
+      }
+    }
+  }
+}
+
+GET idx1
+
+GET idx1/_analyze
+{
+  "field": "title",
+  "text": "Bears"
+}
+
+GET idx1/_analyze
+{
+  "field": "english_title",
+  "text": "Bears"
+}
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      }
+    }
+  }
+}
+
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "avg_bal": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "avg_bal": {
+          "avg": {
+            "field": "balance"
+          }
+        },
+        "gender": {
+          "terms": {
+            "field": "gender.keyword"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "avg_bal": {
+          "avg": {
+            "field": "balance"
+          }
+        },
+        "gender": {
+          "terms": {
+            "field": "gender.keyword"
+          },
+          "aggs": {
+            "avg_bal": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      }
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "avg_bal": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "states": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "avg_bal": {
+          "avg": {
+            "field": "balance"
+          }
+        },
+        "gender": {
+          "aggs": {
+            "terms": {
+              "field": "gender.keyword"
+            },
+            "aggs": {"avg_bal": {"avg": {"field":"balance"}}}
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "balance-stats": {
+      "stats": {
+        "field": "balance"
+      }
+    }
+  }
+}
+
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "pct_balances": {
+      "percentiles": {
+        "field": "balance",
+        "percents": [
+          1,
+          5,
+          25,
+          50,
+          75,
+          95,
+          99
+        ]
+      }
+    }
+  }
+}
+
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "pct_balances": {
+      "percentiles": {
+        "field": "balance",
+        "percents": [
+          1,
+          5,
+          25,
+          50,
+          75,
+          95,
+          99
+        ],
+        "hdr": {
+          "number_of_significant_value_digits": 3
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "pct_balances": {
+      "percentile_ranks": {
+        "field": "balance",
+        "values": [
+          35000,50000
+        ],
+        "hdr": {
+          "number_of_significant_value_digits": 3
+        }
+      }
+    }
+  }
+}
+
+
+
+GET bank/account/_search
+{
+  "size": 0,
+  "aggs": {
+    "bals": {
+      "histogram": {
+        "field": "balance",
+        "interval": 500
+      }
+    }
+  }
+  
+}
+
+
+
+
+
+
