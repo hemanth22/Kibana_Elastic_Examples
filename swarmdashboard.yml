@@ -5,9 +5,9 @@ services:
   dashboard:
     image: charypar/swarm-dashboard
     volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
-    - 8080:8080
+      - 8263:8080
     environment:
       PORT: 8080
     deploy:
