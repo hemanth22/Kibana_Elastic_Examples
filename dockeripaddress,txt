@@ -1,0 +1,4 @@
+docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+/dashboard_dashboard.1.o5hw050kx64lagk6aa2ja834o - 10.0.2.310.255.0.21
+/ek_elasticsearch.1.h2ehodrcaa7x53olqz6wpycbq - 10.0.1.610.255.0.12
+/ek_kibana.1.lem62w2p2gg9vwamnqfremqku - 10.0.1.310.255.0.9
