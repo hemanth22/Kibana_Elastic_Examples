@@ -1,0 +1,39 @@
+POST /_xpack/sql?format=txt
+{
+    "query": "SELECT * FROM library WHERE release_date < '2000-01-01'"
+}
+
+
+POST /_xpack/sql?format=txt
+{
+    "query": "SHOW TABLES"
+}
+
+
+POST /_xpack/sql?format=txt
+{
+    "query": "select account_number,address from bank"
+}
+
+POST /_xpack/sql?format=txt
+{
+    "query": "DESCRIBE bank"
+}
+
+
+POST /_xpack/sql?format=txt
+{
+    "query": "SHOW FUNCTIONS"
+}
+
+POST /_xpack/sql?format=txt
+{
+    "query": "SHOW COLUMNS IN bank"
+}
+
+
+
+POST /_xpack/sql?format=txt
+{
+    "query": "select * from logstash"
+}

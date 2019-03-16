@@ -1,0 +1,25 @@
+Average:
+
+POST /exams/_search?size=0
+{
+    "aggs" : {
+        "avg_grade" : { "avg" : { "field" : "grade" } }
+    }
+}
+
+
+POST /exams/_search?size=0
+{
+    "aggs" : {
+        "avg_grade" : {
+            "avg" : {
+                "script" : {
+                    "id": "my_script",
+                    "params": {
+                        "field": "grade"
+                    }
+                }
+            }
+        }
+    }
+}

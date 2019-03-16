@@ -1,0 +1,66 @@
+Create Index
+-------------
+
+PUT twitter
+
+Index Settings
+--------------
+
+PUT twitter
+{
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 3,
+            "number_of_replicas" : 2
+        }
+    }
+}
+
+
+PUT twitter
+{
+    "settings" : {
+        "number_of_shards" : 3,
+        "number_of_replicas" : 2
+    }
+}
+
+
+Delete index
+-------------
+DELETE /twitter
+
+Get Index
+----------
+GET /twitter
+
+Indices Exists
+---------------
+HEAD twitter
+
+
+Open and close Index API
+-------------------------
+
+POST /my_index/_close
+
+POST /my_index/_open
+
+
+Clear Cache
+------------
+
+POST /twitter/_cache/clear
+
+POST /twitter/_cache/clear?query=true
+POST /twitter/_cache/clear?request=true
+POST /twitter/_cache/clear?fielddata=true
+
+POST /twitter/_cache/clear?fields=foo,bar
+
+Multi Index
+-----------
+
+POST /kimchy,elasticsearch/_cache/clear
+
+POST /_cache/clear

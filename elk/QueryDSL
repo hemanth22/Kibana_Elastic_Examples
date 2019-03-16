@@ -1,0 +1,554 @@
+Query and filter context
+--------------------------
+
+
+GET /_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "title":   "Search"        }},
+        { "match": { "content": "Elasticsearch" }}
+      ],
+      "filter": [
+        { "term":  { "status": "published" }},
+        { "range": { "publish_date": { "gte": "2015-01-01" }}}
+      ]
+    }
+  }
+}
+
+
+Match All query
+---------------
+
+GET /_search
+{
+    "query": {
+        "match_all": {}
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "match_none": {}
+    }
+}
+
+
+Match Query
+-----------
+
+GET /_search
+{
+    "query": {
+        "match" : {
+            "message" : "this is a test"
+        }
+    }
+}
+
+GET /_search
+{
+    "query": {
+        "match" : {
+            "message" : {
+                "query" : "this is a test",
+                "operator" : "and"
+            }
+        }
+    }
+}
+
+GET /_search
+{
+    "query": {
+        "match" : {
+            "message" : {
+                "query" : "to be or not to be",
+                "operator" : "and",
+                "zero_terms_query": "all"
+            }
+        }
+    }
+}
+
+Cut off Frequency
+------------------
+
+GET /_search
+{
+    "query": {
+        "match" : {
+            "message" : {
+                "query" : "to be or not to be",
+                "cutoff_frequency" : 0.001
+            }
+        }
+    }
+}
+
+
+Match Phrase Query
+-------------------
+
+GET /_search
+{
+    "query": {
+        "match_phrase" : {
+            "message" : "this is a test"
+        }
+    }
+}
+
+GET /_search
+{
+    "query": {
+        "match_phrase" : {
+            "message" : {
+                "query" : "this is a test",
+                "analyzer" : "my_analyzer"
+            }
+        }
+    }
+}
+
+
+Match Phrase Prefix Query
+-------------------------
+
+
+GET /_search
+{
+    "query": {
+        "match_phrase_prefix" : {
+            "message" : "quick brown f"
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "match_phrase_prefix" : {
+            "message" : {
+                "query" : "quick brown f",
+                "max_expansions" : 10
+            }
+        }
+    }
+}
+
+
+Multi Match Query
+------------------
+
+GET /_search
+{
+  "query": {
+    "multi_match" : {
+      "query":    "this is a test",
+      "fields": [ "subject", "message" ]
+    }
+  }
+}
+
+Common Terms Query
+------------------
+
+
+GET /_search
+{
+    "query": {
+        "common": {
+            "body": {
+                "query": "this is bonsai cool",
+                "cutoff_frequency": 0.001
+            }
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "common": {
+            "body": {
+                "query": "nelly the elephant as a cartoon",
+                "cutoff_frequency": 0.001,
+                "low_freq_operator": "and"
+            }
+        }
+    }
+}
+
+GET /_search
+{
+    "query": {
+        "bool": {
+            "must": [
+            { "term": { "body": "nelly"}},
+            { "term": { "body": "elephant"}},
+            { "term": { "body": "cartoon"}}
+            ],
+            "should": [
+            { "term": { "body": "the"}},
+            { "term": { "body": "as"}},
+            { "term": { "body": "a"}}
+            ]
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "bool": {
+            "must": {
+                "bool": {
+                    "should": [
+                    { "term": { "body": "nelly"}},
+                    { "term": { "body": "elephant"}},
+                    { "term": { "body": "cartoon"}}
+                    ],
+                    "minimum_should_match": 2
+                }
+            },
+            "should": [
+                { "term": { "body": "the"}},
+                { "term": { "body": "as"}},
+                { "term": { "body": "a"}}
+                ]
+        }
+    }
+}
+
+
+Query String Query
+------------------
+
+GET /_search
+{
+    "query": {
+        "query_string" : {
+            "default_field" : "content",
+            "query" : "this AND that OR thus"
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "query_string" : {
+            "default_field" : "content",
+            "query" : "(new york city) OR (big apple)"
+        }
+    }
+}
+
+
+Simple Query String Query
+-------------------------
+
+GET /_search
+{
+  "query": {
+    "simple_query_string" : {
+        "query": "\"fried eggs\" +(eggplant | potato) -frittata",
+        "fields": ["title^5", "body"],
+        "default_operator": "and"
+    }
+  }
+}
+
+
+
+GET /_search
+{
+    "query": {
+        "simple_query_string" : {
+            "fields" : ["content"],
+            "query" : "foo bar -baz"
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "simple_query_string" : {
+            "fields" : ["content", "name.*^5"],
+            "query" : "foo bar baz"
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "simple_query_string" : {
+            "query" : "foo | bar + baz*",
+            "flags" : "OR|AND|PREFIX"
+        }
+    }
+}
+
+
+GET /_search
+{
+   "query": {
+       "simple_query_string" : {
+           "query" : "ny city",
+           "auto_generate_synonyms_phrase_query" : false
+       }
+   }
+}
+
+
+
+ Term Query
+ -----------
+
+ POST /_search
+{
+  "query": {
+    "term" : { "user" : "Kimchy" }
+  }
+}
+
+
+GET /_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "term": {
+            "status": {
+              "value": "urgent",
+              "boost": 2.0
+            }
+          }
+        },
+        {
+          "term": {
+            "status": "normal"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+GET /my_index/_search
+{
+  "query": {
+    "term": {
+      "exact_value": "Quick Foxes!"
+    }
+  }
+}
+
+
+GET /my_index/_search
+{
+  "query": {
+    "term": {
+      "full_text": "Quick Foxes!"
+    }
+  }
+}
+
+
+GET /my_index/_search
+{
+  "query": {
+    "term": {
+      "full_text": "foxes"
+    }
+  }
+}
+
+
+GET /my_index/_search
+{
+  "query": {
+    "match": {
+      "full_text": "Quick Foxes!"
+    }
+  }
+}
+
+
+Terms Query
+------------
+
+GET /_search
+{
+    "query": {
+        "terms" : { "user" : ["kimchy", "elasticsearch"]}
+    }
+}
+
+GET /tweets/_search
+{
+    "query" : {
+        "terms" : {
+            "user" : {
+                "index" : "users",
+                "type" : "_doc",
+                "id" : "2",
+                "path" : "followers"
+            }
+        }
+    }
+}
+
+Type Query
+-----------
+
+GET /_search
+{
+    "query": {
+        "type" : {
+            "value" : "_doc"
+        }
+    }
+}
+
+Wildcard query
+--------------
+
+GET /tweets/_search
+{
+    "query" : {
+        "terms" : {
+            "user" : {
+                "index" : "users",
+                "type" : "_doc",
+                "id" : "2",
+                "path" : "followers"
+            }
+        }
+    }
+}
+
+GET /tweets/_search
+{
+    "query" : {
+        "terms" : {
+            "user" : {
+                "index" : "users",
+                "type" : "_doc",
+                "id" : "2",
+                "path" : "followers"
+            }
+        }
+    }
+}
+
+Regex Query
+------------
+
+GET /_search
+{
+    "query": {
+        "regexp":{
+            "name.first": "s.*y"
+        }
+    }
+}
+
+
+GET /_search
+{
+    "query": {
+        "regexp":{
+            "name.first":{
+                "value":"s.*y",
+                "boost":1.2
+            }
+        }
+    }
+}
+
+
+Prefix Query
+------------
+
+GET /_search
+{ "query": {
+    "prefix" : { "user" : "ki" }
+  }
+}
+
+GET /_search
+{ "query": {
+    "prefix" : { "user" :  { "value" : "ki", "boost" : 2.0 } }
+  }
+}
+
+
+Range Query
+------------
+
+GET /_search
+{
+    "query": {
+        "range" : {
+            "age" : {
+                "gte" : 10,
+                "lte" : 20,
+                "boost" : 2.0
+            }
+        }
+    }
+}
+
+GET /_search
+{
+    "query": {
+        "range" : {
+            "date" : {
+                "gte" : "now-1d/d",
+                "lt" :  "now/d"
+            }
+        }
+    }
+}
+
+Exists Query
+--------------
+
+GET /_search
+{
+    "query": {
+        "exists" : { "field" : "user" }
+    }
+}
+
+Missing query
+--------------
+
+GET /_search
+{
+    "query": {
+        "bool": {
+            "must_not": {
+                "exists": {
+                    "field": "user"
+                }
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@ services:
     image: elasticsearch:6.6.0
     ports:
       - "9200:9200"
+      - "9300:9300"
     networks:
       - elastic
     environment:
@@ -35,5 +36,19 @@ services:
         condition: on-failure
         max_attempts: 3
 
+  logstash:
+    image: logstash:6.6.0
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 120s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
 networks:
   elastic:

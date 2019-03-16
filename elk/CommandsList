@@ -1,0 +1,800 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+
+GET /_cat/health?v
+
+
+GET /_cat/nodes?v
+
+
+GET /_cat/indices?v
+
+Console Command to create index with name customer: PUT /customer?pretty
+
+GET /_cat/indices?v
+
+PUT /customer/_doc/1?pretty
+{
+  "name": "John Doe"
+}
+
+GET /customer/_doc/1?pretty
+
+DELETE /customer?pretty
+
+GET /_cat/indices?v
+
+<HTTP Verb> /<Index>/<Type>/<ID>
+
+===============================
+
+PUT /customer/_doc/1?pretty
+{
+  "name": "John Doe"
+}
+
+PUT /customer/_doc/1?pretty
+{
+  "name": "Jane Doe"
+}
+
+PUT /customer/_doc/2?pretty
+{
+  "name": "Jane Doe"
+}
+
+POST /customer/_doc?pretty
+{
+  "name": "Jane Doe"
+}
+
+GET /customer/_doc/1?pretty
+
+GET /customer/_doc/2?pretty
+
+==================
+POST /customer/_doc/1/_update?pretty
+{
+  "doc": { "name": "Jan Doe" }
+}
+
+POST /customer/_doc/1/_update?pretty
+{
+  "doc": { "name": "Jane Doe", "age": 20 }
+}
+
+POST /customer/_doc/1/_update?pretty
+{
+  "script" : "ctx._source.age += 5"
+}
+
+GET /customer/_doc/1?pretty
+
+DELETE /customer/_doc/2?pretty
+
+======= batch processing ==========
+
+POST /customer/_doc/_bulk?pretty
+{"index":{"_id":"1"}}
+{"name": "John Doe" }
+{"index":{"_id":"2"}}
+{"name": "Jane Doe" }
+
+
+POST /customer/_doc/_bulk?pretty
+{"update":{"_id":"1"}}
+{"doc": { "name": "John Doe becomes Jane Doe" } }
+{"delete":{"_id":"2"}}
+
+
+======== Exploring your data ===========
+
+wget -O accounts.json https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true
+
+curl -H "Content-Type: application/json" -XPOST "localhost:9200/bank/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
+
+curl "localhost:9200/_cat/indices?v"
+
+
+Search API
+----------
+
+GET /bank/_search?q=*&sort=account_number:asc&pretty
+
+Sort by account_number in ascending order:
+
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "sort": [
+    { "account_number": "asc" }
+  ]
+}
+
+Introducing the Query Language
+------------------------------
+
+GET /bank/_search
+{
+  "query": { "match_all": {} }
+}
+
+To print one document below json.
+
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "size": 1
+}
+
+To print ten documents below json.
+
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "from": 10,
+  "size": 10
+}
+
+Sort by order balance in descending order.
+
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "sort": { "balance": { "order": "desc" } }
+}
+
+
+Executing searches
+------------------
+
+it is like select account_number, account_number from bank.
+
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "_source": ["account_number", "balance"]
+}
+
+it is like select account_number, account_number from bank where account_number = 20.
+
+GET /bank/_search
+{
+  "query": { "match": { "account_number": 20 } },
+  "_source": ["account_number", "balance"]
+}
+
+it is like select * from bank where address like '%mill%'.
+
+GET /bank/_search
+{
+  "query": { "match": { "address": "mill" } }
+}
+
+
+it is like select account_number, account_number from bank where address like '%mill%'.
+
+GET /bank/_search
+{
+  "query": { "match": { "address": "mill" } },
+  "_source": ["account_number", "balance"]
+}
+
+it is like select account_number, account_number, address from bank where address like '%mill%'.
+
+GET /bank/_search
+{
+  "query": { "match": { "address": "mill" } },
+  "_source": ["account_number", "balance", "address"]
+}
+
+it is like select * from bank where address like '%mill%' or address like '%lane%'.
+
+GET /bank/_search
+{
+  "query": { "match": { "address": "mill lane" } }
+}
+
+it is like select * from bank where address like '%mill lane%'.
+
+GET /bank/_search
+{
+  "query": { "match_phrase": { "address": "mill lane" } }
+}
+
+bool query. The bool query allows us to compose smaller queries into bigger queries using boolean logic.
+
+it is like select * from bank where address like '%mill%' and address like '%lane%'.
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+
+it is like select account_number, balance, address from bank where address like '%mill%' and address like '%lane%'.
+
+two match queries and returns all accounts containing "mill" and "lane" in the address:
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  },
+    "_source": ["account_number", "balance", "address"]
+}
+
+
+
+it is like select * from bank where address like '%mill%' or address like '%lane%'.
+two match queries and returns all accounts containing "mill" or "lane" in the address:
+
+ GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+
+
+
+it is like select * from bank where address not like '%mill%' or address not like '%lane%'.
+
+two match queries and returns all accounts that contain neither "mill" nor "lane" in the address:
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+
+it is like select * from bank where age like '%40%' or state not like '%"%'.
+example returns all accounts of anybody who is 40 years old but doesn’t live in ID(aho):
+
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "age": "40" } }
+      ],
+      "must_not": [
+        { "match": { "state": "ID" } }
+      ]
+    }
+  }
+}
+
+it is like select account_number, state, age from bank where age like '%40%' or state not like '%ID%'.
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "age": "40" } }
+      ],
+      "must_not": [
+        { "match": { "state": "ID" } }
+      ]
+    }
+  },
+        "_source": ["account_number", "state", "age"]
+}
+
+Executing filter
+-----------------
+
+it is like select * from bank where age >= 20000 or age <= 30000.
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": { "match_all": {} },
+      "filter": {
+        "range": {
+          "balance": {
+            "gte": 20000,
+            "lte": 30000
+          }
+        }
+      }
+    }
+  }
+}
+
+it is like select account_number, balance from bank where age >= 20000 or age <= 30000.
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": { "match_all": {} },
+      "filter": {
+        "range": {
+          "balance": {
+            "gte": 20000,
+            "lte": 30000
+          }
+        }
+      }
+    }
+  },
+          "_source": ["account_number", "balance"]
+}
+
+Executing Aggregations
+----------------------
+
+
+GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state.keyword"
+      }
+    }
+  }
+}
+
+Note that we set size=0 to not show search hits because we only want to see the aggregation results in the response.
+
+group_by_state is just name of the search like alias in SQL
+
+In SQL, the above aggregation is similar in concept to:
+
+SELECT state, COUNT(*) FROM bank GROUP BY state ORDER BY COUNT(*) DESC LIMIT 10;
+
+
+
+GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "average_balance": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
+
+Notice how we nested the average_balance aggregation inside the group_by_state aggregation. This is a common pattern for all the aggregations. You can nest aggregations inside aggregations arbitrarily to extract pivoted summarizations that you require from your data.
+
+Sample output:
+
+"buckets" : [
+  {
+    "key" : "ID",
+    "doc_count" : 27,
+    "average_balance" : {
+      "value" : 24368.777777777777
+    }
+]
+
+
+SQL Example:
+
+select state, count(*),avg(balance) from bank GROUP BY state,balance ORDER BY COUNT(*) DESC LIMIT 10;
+
+
+GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state.keyword",
+        "order": {
+          "average_balance": "desc"
+        }
+      },
+      "aggs": {
+        "average_balance": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
+
+=========================================
+
+
+GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_age": {
+      "range": {
+        "field": "age",
+        "ranges": [
+          {
+            "from": 20,
+            "to": 30
+          },
+          {
+            "from": 30,
+            "to": 40
+          },
+          {
+            "from": 40,
+            "to": 50
+          }
+        ]
+      },
+      "aggs": {
+        "group_by_gender": {
+          "terms": {
+            "field": "gender.keyword"
+          },
+          "aggs": {
+            "average_balance": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+SQL Example:
+
+select age, gender, count(*),avg(balance) from bank
+where age between 20 and 30 and age between 30 and 40
+and age between 40 and 50
+GROUP BY age, gender, balance ORDER BY COUNT(*) DESC LIMIT 10;
+
+
+Document API's
+==============
+
+Single Document API's
+---------------------
+
+Index API's
+-----------
+creating a index:
+
+PUT twitter/_doc/1
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+
+
+
+PUT /_cluster/settings
+{
+    "persistent": {
+        "action.auto_create_index": "twitter,index10,-index1*,+ind*"
+    }
+}
+
+
+PUT /_cluster/settings
+{
+    "persistent": {
+        "action.auto_create_index": "false"
+    }
+}
+
+
+PUT /_cluster/settings
+{
+    "persistent": {
+        "action.auto_create_index": "true"
+    }
+}
+
+GET API
+--------
+
+POST twitter/_doc/
+{
+    "user" : "kimchy",
+    "post_date" : "2019-03-16T13:04:12",
+    "message" : "trying out Elasticsearch"
+}
+
+
+POST twitter/_doc/
+{
+    "user" : "kimchy",
+    "post_date" : "2019-03-16T13:04:12",
+    "message" : "trying out Elasticsearch"
+}
+
+
+
+POST twitter/_doc?routing=kimchy
+{
+    "user" : "kimchy",
+    "post_date" : "2019-03-16T13:04:12",
+    "message" : "trying out Elasticsearch"
+}
+
+
+PUT twitter/_doc/1?timeout=5m
+{
+    "user" : "kimchy",
+    "post_date" : "2019-03-16T13:04:12",
+    "message" : "trying out Elasticsearch"
+}
+
+
+HEAD twitter/_doc/0
+HEAD is used to check existence of index
+
+
+
+PUT /twitter/_doc/1
+{
+    "counter" : 1,
+    "tags" : ["red"]
+}
+
+
+GET twitter/_doc/1?stored_fields=tags,counter
+
+DELETE API
+----------
+DELETE /twitter/_doc/1?routing=kimchy
+
+
+UPDATE API
+-----------
+
+POST test/_doc/1/_update
+{
+    "script" : "ctx._source.new_field = 'value_of_new_field'"
+}
+
+POST test/_doc/1/_update
+{
+    "script" : "ctx._source.remove('new_field')"
+}
+
+POST /test/_doc/1/_update
+{
+    "script" : {
+        "source": "if (ctx._source.tags.contains(params.tag)) { ctx.op = \u0027delete\u0027 } else { ctx.op = \u0027none\u0027 }",
+        "lang": "painless",
+        "params" : {
+            "tag" : "green"
+        }
+    }
+}
+
+
+POST /test/_doc/1/_update
+{
+    "doc" : {
+        "name" : "new_name"
+    }
+}
+
+Multi-document APIs
+====================
+
+MultiGet API
+------------
+
+GET /_mget
+{
+    "docs" : [
+        {
+            "_index" : "test",
+            "_type" : "_doc",
+            "_id" : "1"
+        },
+        {
+            "_index" : "test",
+            "_type" : "_doc",
+            "_id" : "2"
+        }
+    ]
+}
+
+GET /test/_doc/_mget
+{
+    "docs" : [
+        {
+            "_id" : "1"
+        },
+        {
+            "_id" : "2"
+        }
+    ]
+}
+
+GET /test/_doc/_mget
+{
+    "ids" : ["1", "2"]
+}
+
+BULK API
+--------
+
+$ cat requests
+{ "index" : { "_index" : "test", "_type" : "_doc", "_id" : "1" } }
+{ "field1" : "value1" }
+$ curl -s -H "Content-Type: application/x-ndjson" -XPOST localhost:9200/_bulk --data-binary "@requests"; echo
+{"took":7, "errors": false, "items":[{"index":{"_index":"test","_type":"_doc","_id":"1","_version":1,"result":"created","forced_refresh":false}}]}
+
+POST _bulk
+{ "index" : { "_index" : "test", "_type" : "_doc", "_id" : "1" } }
+{ "field1" : "value1" }
+{ "delete" : { "_index" : "test", "_type" : "_doc", "_id" : "2" } }
+{ "create" : { "_index" : "test", "_type" : "_doc", "_id" : "3" } }
+{ "field1" : "value3" }
+{ "update" : {"_id" : "1", "_type" : "_doc", "_index" : "test"} }
+{ "doc" : {"field2" : "value2"} }
+
+
+POST _bulk
+{ "update" : {"_id" : "1", "_type" : "_doc", "_index" : "index1", "retry_on_conflict" : 3} }
+{ "doc" : {"field" : "value"} }
+{ "update" : { "_id" : "0", "_type" : "_doc", "_index" : "index1", "retry_on_conflict" : 3} }
+{ "script" : { "source": "ctx._source.counter += params.param1", "lang" : "painless", "params" : {"param1" : 1}}, "upsert" : {"counter" : 1}}
+{ "update" : {"_id" : "2", "_type" : "_doc", "_index" : "index1", "retry_on_conflict" : 3} }
+{ "doc" : {"field" : "value"}, "doc_as_upsert" : true }
+{ "update" : {"_id" : "3", "_type" : "_doc", "_index" : "index1", "_source" : true} }
+{ "doc" : {"field" : "value"} }
+{ "update" : {"_id" : "4", "_type" : "_doc", "_index" : "index1"} }
+{ "doc" : {"field" : "value"}, "_source": true}
+
+DELETE BY QUERY APIs
+-----------
+
+POST twitter/_delete_by_query
+{
+  "query": {
+    "match": {
+      "message": "some message"
+    }
+  }
+}
+
+
+POST twitter/_doc/_delete_by_query?conflicts=proceed
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+POST twitter,blog/_docs,post/_delete_by_query
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+POST twitter,blog/_docs,post/_delete_by_query
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+POST twitter/_delete_by_query?scroll_size=5000
+{
+  "query": {
+    "term": {
+      "user": "kimchy"
+    }
+  }
+}
+
+UPDATE BY QUERY APIs
+---------------------
+
+POST twitter/_update_by_query
+{
+  "script": {
+    "source": "ctx._source.likes++",
+    "lang": "painless"
+  },
+  "query": {
+    "term": {
+      "user": "kimchy"
+    }
+  }
+}
+
+REINDEX APIs
+------------
+
+POST _reindex
+{
+  "source": {
+    "index": "twitter"
+  },
+  "dest": {
+    "index": "new_twitter"
+  }
+}
+
+
+or
+
+curl -X POST "localhost:9200/_reindex" -H 'Content-Type: application/json' -d'
+{
+  "source": {
+    "index": "twitter"
+  },
+  "dest": {
+    "index": "new_twitter"
+  }
+}
+'
+
+
+Refresh or wait forced_refresh
+-------------------------------
+
+PUT /test/_doc/1?refresh
+{"test": "test"}
+
+
+PUT /test/_doc/2?refresh=true
+{"test": "test"}
+
+PUT /test/_doc/3
+{"test": "test"}
+
+
+PUT /test/_doc/4?refresh=false
+{"test": "test"}
+
+
+PUT /test/_doc/4?refresh=wait_for
+{"test": "test"}

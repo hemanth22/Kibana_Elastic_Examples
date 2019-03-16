@@ -12,6 +12,12 @@ services:
       PORT: 8080
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 20s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
       placement:
         constraints:
           - node.role == manager
