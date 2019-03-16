@@ -12,8 +12,14 @@ POST /_xpack/sql?format=txt
 
 POST /_xpack/sql?format=txt
 {
-    "query": "select account_number,address from bank"
+    "query": "select account_number,age,balance from bank"
 }
+
+POST _xpack/sql
+{
+    "query": "select account_number,balance,age from bank"
+}
+
 
 POST /_xpack/sql?format=txt
 {
@@ -36,4 +42,45 @@ POST /_xpack/sql?format=txt
 POST /_xpack/sql?format=txt
 {
     "query": "select * from logstash"
+}
+
+
+POST /_xpack/sql/translate
+{
+    "query": "SELECT * FROM library ORDER BY page_count DESC",
+    "fetch_size": 10
+}
+
+
+POST /_xpack/sql/translate
+{
+    "query": "select account_number,balance,age from bank"
+}
+
+GET /bank/_search
+{
+  "size" : 1000,
+  "_source" : false,
+  "stored_fields" : "_none_",
+  "docvalue_fields" : [
+    {
+      "field" : "account_number",
+      "format" : "use_field_mapping"
+    },
+    {
+      "field" : "balance",
+      "format" : "use_field_mapping"
+    },
+    {
+      "field" : "age",
+      "format" : "use_field_mapping"
+    }
+  ],
+  "sort" : [
+    {
+      "_doc" : {
+        "order" : "asc"
+      }
+    }
+  ]
 }
