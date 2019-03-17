@@ -84,3 +84,31 @@ GET /bank/_search
     }
   ]
 }
+
+
+
+GET _xpack/sql?format=json
+{
+  "query": "DESCRIBE logstash*"
+}
+
+
+GET _xpack/sql?format=txt
+{
+  "query": "DESCRIBE bank"
+}
+
+GET /_xpack/sql?format=txt
+{
+    "query": "select account_number,age,balance from bank"
+}
+
+GET /_xpack/sql?format=txt
+{
+    "query": "SHOW COLUMNS IN bank"
+}
+
+GET /_xpack/sql?format=txt
+{
+    "query": "SHOW tables"
+}
