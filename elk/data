@@ -1,0 +1,5 @@
+CONTAINER ID        IMAGE                             COMMAND                  CREATED             STATUS                       PORTS                NAMES
+07edfcfb40d9        logstash:6.6.0                    "/usr/local/bin/dock…"   About an hour ago   Up About an hour             5044/tcp, 9600/tcp   ek_logstash.1.t3um7ymiys59ppsmcinxv8lsc
+6403506d5f65        kibana:6.6.0                      "/usr/local/bin/kiba…"   About an hour ago   Up About an hour             5601/tcp             ek_kibana.1.ib3rul5p6irbtvykmazktl1lk
+a15bcf4a1f11        elasticsearch:6.6.0               "/usr/local/bin/dock…"   About an hour ago   Up About an hour             9200/tcp, 9300/tcp   ek_elasticsearch.1.zrjpg091rdxs016l2x3hql1iq
+e00dae8e64a2        charypar/swarm-dashboard:latest   "/sbin/tini -- node …"   About an hour ago   Up About an hour (healthy)                        dashboard_dashboard.1.ikbfnjfjr5w8ccpesj4whfn2v

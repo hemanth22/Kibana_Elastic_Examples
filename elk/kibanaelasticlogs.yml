@@ -7,6 +7,7 @@ services:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - "9200:9200"
+      - "9300:9300"
     networks:
       - elastic
     environment:
@@ -45,7 +46,7 @@ services:
       - ./logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
     ports:
-      - "5000:5000"
+      - "5044:5044"
       - "9600:9600"
     networks:
       - elastic
