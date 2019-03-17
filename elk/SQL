@@ -112,3 +112,15 @@ GET /_xpack/sql?format=txt
 {
     "query": "SHOW tables"
 }
+
+GET /_xpack/sql?format=txt
+{
+    "query": "DESCRIBE \"logstash-2015.05.18\""
+}
+
+
+
+GET _xpack/sql?format=txt
+{
+    "query": "select * from \"logstash-2015.05.18\""
+}
