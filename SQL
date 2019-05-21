@@ -61,3 +61,15 @@ POST /_xpack/sql?format=txt
     "query": """select account_number,age,firstname,lastname from bank where account_number in (25,20)"""
     
 }
+
+
+
+POST /_xpack/sql?format=txt
+{
+    "query": "DESCRIBE  \"logstash-2015.05.18\""
+}
+
+POST /_xpack/sql?format=txt
+{
+    "query": "SHOW COLUMNS IN \"logstash-2015.05.18\""
+}
