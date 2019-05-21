@@ -37,3 +37,27 @@ POST /_xpack/sql?format=txt
 {
     "query": "select * from logstash"
 }
+
+
+
+POST /_xpack/sql?format=txt
+{
+    
+    "query": """select account_number,age,firstname,lastname from bank where firstname.keyword in ('Virginia','Elinor') """
+    
+  
+}
+
+POST /_xpack/sql?format=txt
+{
+    "query": """DESCRIBE bank"""
+}
+
+
+
+POST /_xpack/sql?format=txt
+{
+    
+    "query": """select account_number,age,firstname,lastname from bank where account_number in (25,20)"""
+    
+}
