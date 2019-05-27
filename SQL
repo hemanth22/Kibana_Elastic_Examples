@@ -73,3 +73,42 @@ POST /_xpack/sql?format=txt
 {
     "query": "SHOW COLUMNS IN \"logstash-2015.05.18\""
 }
+
+POST /_sql?format=txt
+{
+    "query": """SELECT INTERVAL 1 DAY + INTERVAL 53 MINUTES AS result"""
+}
+
+POST /_sql?format=txt
+{
+    "query": """SELECT CAST('2018-05-13T12:34:56' AS DATETIME) - INTERVAL '2-8' YEAR TO MONTH AS result"""
+}
+
+
+POST /_sql?format=txt
+{
+    "query": """SELECT CURRENT_DATE AS result"""
+}
+
+
+POST /_sql?format=txt
+{
+    "query": """SELECT CURRENT_DATE() AS result"""
+}
+
+POST /_sql?format=txt
+{
+    "query": """SELECT CURDATE() AS result"""
+}
+
+
+
+POST /_sql?format=txt
+{
+    "query": """SELECT TODAY() AS result"""
+}
+
+POST /_sql?format=txt
+{
+    "query": """SELECT NOW() AS result"""
+}
