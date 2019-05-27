@@ -112,3 +112,13 @@ POST /_sql?format=txt
 {
     "query": """SELECT NOW() AS result"""
 }
+
+POST /_sql?format=txt
+{
+    "query": """SELECT CURRENT_TIMESTAMP AS result"""
+}
+
+POST /_sql?format=txt
+{
+    "query": """SELECT CURRENT_TIMESTAMP() AS result"""
+}
