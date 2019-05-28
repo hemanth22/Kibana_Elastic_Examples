@@ -2,10 +2,12 @@
 version: '3.7'
 services:
   elasticsearch:
-    hostname: elasticsearch
     image: elasticsearch:6.6.0
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - "9200:9200"
+      - "9300:9300"
     networks:
       - elastic
     environment:
@@ -20,8 +22,9 @@ services:
         max_attempts: 3
 
   kibana:
-    hostname: kibana
     image: kibana:6.6.0
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
       - "5601:5601"
     networks:
@@ -37,5 +40,25 @@ services:
         condition: on-failure
         max_attempts: 3
 
+  logstash:
+    image: logstash:6.6.0
+    volumes:
+      - ./logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 120s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
 networks:
   elastic:

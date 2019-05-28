@@ -2,12 +2,11 @@
 version: '3.7'
 services:
   elasticsearch:
-    image: elasticsearch:6.6.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
     volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - "9200:9200"
-      - "9300:9300"
     networks:
       - elastic
     environment:
@@ -22,7 +21,7 @@ services:
         max_attempts: 3
 
   kibana:
-    image: kibana:6.6.0
+    image: docker.elastic.co/kibana/kibana:7.1.0
     volumes:
       - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
@@ -40,16 +39,15 @@ services:
         condition: on-failure
         max_attempts: 3
 
-  logstash:
-    image: logstash:6.6.0
+  filebeat:
+    user: root
+    image: docker.elastic.co/beats/filebeat:7.1.0
     volumes:
-      - ./logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
-    ports:
-      - "5044:5044"
-      - "9600:9600"
+      - ./filebeat.yml:/etc/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/hostfs/var/lib/docker/containers
     networks:
       - elastic
+    command: nohup filebeat -e -strict.perms=false &
     depends_on:
       - elasticsearch
     deploy:
@@ -60,5 +58,45 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 3
+
+  heartbeat:
+    user: root
+    image: docker.elastic.co/beats/heartbeat:7.1.0
+    volumes:
+      - ./heartbeat.yml:/etc/heartbeat/heartbeat.yml:ro
+    networks:
+      - elastic
+    command: nohup heartbeat -e -strict.perms=false &
+    depends_on:
+      - elasticsearch
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 120s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+  metricbeat:
+    user: root
+    image: docker.elastic.co/beats/metricbeat:7.1.0
+    volumes:
+      - ./metricbeat.yml:/etc/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - elastic
+    command: nohup metricbeat -e -strict.perms=false &
+    depends_on:
+      - elasticsearch
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 120s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
 networks:
   elastic:

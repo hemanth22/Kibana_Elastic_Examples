@@ -1,0 +1,5 @@
+/etc/filebeat/filebeat.yml
+/etc/heartbeat/heartbeat.yml
+/etc/metricbeat/metricbeat.yml
+/usr/share/elasticsearch/config/elasticsearch.yml
+/usr/share/kibana/config/kibana.yml
