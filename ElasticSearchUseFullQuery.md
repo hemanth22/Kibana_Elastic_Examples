@@ -1,3 +1,16 @@
+__New Version SQL Example__
+
+```
+POST /_sql?format=txt
+{
+  "query":""" 
+  select "field", "field", "field", "field"  from "index-2019.05.20" where "field.keyword"='value' 
+  or  "field"='value' or field = 'value'
+  """
+}
+```
+
+
 __SQL Sample__
 
 ```
